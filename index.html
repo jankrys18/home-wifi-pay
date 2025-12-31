@@ -37,8 +37,11 @@ p{text-align:center;color:#94a3b8;font-size:14px;}
   padding:16px;
   margin-top:16px;
 }
-.plan h2{margin:0;font-size:18px;}
-.note{
+.plan h2{margin:0;font-size:18px;}  .plan-sub{color:#cbd5f5;margin-top:6px;font-size:13px;}
+  .plan-price{color:#22c55e;font-weight:600;margin-top:6px;}
+  .checkout{margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .card-icons{font-size:20px;opacity:0.9;}
+  .back-link{display:inline-block;margin-bottom:12px;color:#94a3b8;font-size:13px;text-decoration:none;}.note{
   margin-top:14px;
   font-size:13px;
   color:#cbd5f5;
@@ -55,14 +58,24 @@ p{text-align:center;color:#94a3b8;font-size:14px;}
 <h1>🏠 Home WiFi Payment</h1>
 <p>Select a plan and complete PayPal payment</p>
 
-<div class="plan">
+<div class="plan" data-plan="10">
   <h2>₱10 – 8 Hours</h2>
-  <div id="paypal-container-10"></div>
+  <div class="plan-sub">8hrs WiFi</div>
+  <div class="plan-price">₱10.00 PHP</div>
+  <div class="checkout">
+    <div id="paypal-container-10"></div>
+    <div class="card-icons" aria-hidden="true">💳</div>
+  </div>
 </div>
 
-<div class="plan">
+<div class="plan" data-plan="20">
   <h2>₱20 – 1 Day</h2>
-  <div id="paypal-container-20"></div>
+  <div class="plan-sub">1 day access</div>
+  <div class="plan-price">₱20.00 PHP</div>
+  <div class="checkout">
+    <div id="paypal-container-20"></div>
+    <div class="card-icons" aria-hidden="true">💳</div>
+  </div>
 </div>
 
 <div class="note">
@@ -84,6 +97,29 @@ paypal.HostedButtons({
 paypal.HostedButtons({
   hostedButtonId: "VSGA8Y2PMUZLJ"
 }).render("#paypal-container-20");
+
+// When ?plan=10 or ?plan=20 is present, hide other plans and show only the selected plan
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const plan = params.get('plan');
+  if (!plan) return;
+
+  document.querySelectorAll('.plan').forEach(el => {
+    if (el.dataset.plan !== plan) el.style.display = 'none';
+  });
+
+  // Add a small "Show all plans" link so users can go back
+  const back = document.createElement('a');
+  back.href = window.location.pathname;
+  back.textContent = 'Show all plans';
+  back.className = 'back-link';
+  const card = document.querySelector('.card');
+  if (card) card.insertBefore(back, card.firstChild);
+
+  // Scroll the selected plan into view
+  const selected = document.querySelector('.plan[data-plan="'+plan+'"]');
+  if (selected) selected.scrollIntoView({behavior:'smooth',block:'center'});
+})();
 </script>
 
 </body>

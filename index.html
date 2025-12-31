@@ -39,7 +39,9 @@ p{text-align:center;color:#94a3b8;font-size:14px;}
 }
 .plan h2{margin:0;font-size:18px;}  .plan-sub{color:#cbd5f5;margin-top:6px;font-size:13px;}
   .plan-price{color:#22c55e;font-weight:600;margin-top:6px;}
-  .checkout{margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .checkout{margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:nowrap;}
+  /* Ensure PayPal container has enough width so text doesn't break vertically */
+  #paypal-container-10, #paypal-container-20{min-width:160px}
   .card-icons{font-size:20px;opacity:0.9;}
   .back-link{display:inline-block;margin-bottom:12px;color:#94a3b8;font-size:13px;text-decoration:none;}
 

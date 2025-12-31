@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="expires" content="-1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Home WiFi Access</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #0f172a, #020617);
+            color: #fff;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: #020617;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .6);
+        }
+
+        h1 {
+            text-align: center;
+            margin: 0 0 10px;
+            font-size: 24px;
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            margin-top: 25px;
+        }
+
+        .section h2 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #38bdf8;
+        }
+
+        .plan {
+            background: #020617;
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+
+        .plan-title {
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .plan-price {
+            color: #22c55e;
+            font-weight: 600;
+            margin: 6px 0;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-paypal {
+            background: #0070ba;
+            color: #fff;
+        }
+
+        .btn-gcash {
+            background: #16a34a;
+            color: #fff;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #1e293b;
+            background: #020617;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .login-form input::placeholder {
+            color: #64748b;
+        }
+
+        .login-form button {
+            width: 100%;
+            background: #38bdf8;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .gcash-box {
+            display: none;
+            background: #020617;
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        .gcash-box img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .chat-btn {
+            display: block;
+            margin-top: 12px;
+            background: #22c55e;
+            color: #fff;
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Removed PayPal SDK to keep hotspot page HTTP-only; PayPal redirect button below will open HTTPS GitHub Pages -->
+
+$(if chap-id)
+    <form name="sendin" action="$(link-login-only)" method="post" style="display:none">
+        <input type="hidden" name="username" />
+        <input type="hidden" name="password" />
+        <input type="hidden" name="dst" value="$(link-orig)" />
+        <input type="hidden" name="popup" value="true" />
+    </form>
+    <script src="/md5.js"></script>
+    <script>
+        function doLogin() {
+            document.sendin.username.value = document.login.username.value;
+            document.sendin.password.value = hexMD5('$(chap-id)' + document.login.password.value + '$(chap-challenge)');
+            document.sendin.submit();
+            return false;
+        }
+
+        function toggleGCash(id) {
+            document.getElementById(id).style.display = 'block';
+        }
+    </script>
+    $(endif)
+
+    <div class="container">
+        <div class="card">
+
+            <h1>🏠 Home WiFi</h1>
+            <p class="subtitle">Buy access or login with voucher</p>
+
+            <!-- BUY WIFI -->
+            <div class="section">
+                <h2>Buy WiFi Access</h2>
+
+                <div class="plan">
+                    <div class="plan-title">₱10 – 8 Hours</div>
+                    <div class="plan-sub">8hrs WiFi</div>
+                    <div class="plan-price">₱10.00 PHP</div>
+                    <div class="buttons">
+                        <button class="btn btn-paypal" onclick="window.location.href='https://jankrys18.github.io/home-wifi-pay/?plan=10'">
+                            Pay with PayPal
+                        </button>
+                        <button class="btn btn-gcash" onclick="toggleGCash('gcash10')">
+                            GCash
+                        </button>
+                    </div>
+
+                    <div class="gcash-box" id="gcash10">
+                        <p>Send ₱10 via GCash then message me:</p>
+                        <img src="img/gcash-qr.png" alt="GCash QR">
+                        <a class="chat-btn"
+                           href="https://m.me/YOURFBUSERNAME?text=I%20paid%20₱10%20for%208hrs.%20MAC:%20$(mac-esc)">
+                           Chat Me (Messenger)
+                        </a>
+                    </div>
+                </div>
+
+                <div class="plan">
+                    <div class="plan-title">₱20 – 1 Day</div>
+                    <div class="plan-sub">1 day access</div>
+                    <div class="plan-price">₱20.00 PHP</div>
+                    <div class="buttons">
+                        <button class="btn btn-paypal" onclick="window.location.href='https://jankrys18.github.io/home-wifi-pay/?plan=20'">
+                            Pay with PayPal
+                        </button>
+                        <button class="btn btn-gcash" onclick="toggleGCash('gcash20')">
+                            GCash
+                        </button>
+                    </div>
+
+                    <div class="gcash-box" id="gcash20">
+                        <p>Send ₱20 via GCash then message me:</p>
+                        <img src="img/gcash-qr.png" alt="GCash QR">
+                        <a class="chat-btn"
+                           href="https://m.me/YOURFBUSERNAME?text=I%20paid%20₱20%20for%201%20day.%20MAC:%20$(mac-esc)">
+                           Chat Me (Messenger)
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LOGIN -->
+            <div class="section">
+                <h2>Login with Voucher</h2>
+
+                <form name="login" class="login-form"
+                    action="$(link-login-only)" method="post"
+                    $(if chap-id) onSubmit="return doLogin()" $(endif)>
+
+
+                    <input type="hidden" name="dst" value="$(link-orig)" />
+                    <input type="hidden" name="popup" value="true" />
+
+                    <input name="username" placeholder="Username / Voucher" value="$(username)">
+                    <input name="password" type="password" placeholder="Password">
+
+                    <button type="submit">Connect</button>
+                </form>
+            </div>
+
+            <div class="footer">
+                Powered by MikroTik • Home WiFi
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

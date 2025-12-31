@@ -45,14 +45,7 @@ p{text-align:center;color:#94a3b8;font-size:14px;}
   .card-icons{font-size:20px;opacity:0.9;}
   .back-link{display:inline-block;margin-bottom:12px;color:#94a3b8;font-size:13px;text-decoration:none;}
 
-/* Modal (plan checkout summary) */
-.modal-overlay{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:flex;align-items:center;justify-content:center;z-index:1000}
-.modal{background:#020617;padding:20px;border-radius:12px;width:320px;max-width:90%;box-shadow:0 10px 30px rgba(0,0,0,0.7);position:relative}
-.modal-close{position:absolute;right:12px;top:12px;background:transparent;border:none;color:#94a3b8;font-size:16px;cursor:pointer}
-.modal-sub{color:#94a3b8;font-size:14px;margin:6px 0 12px}
-.modal-plan .plan-title{font-weight:700;margin-bottom:6px}
-.modal-actions{display:flex;gap:8px;align-items:center}
-.checkout-btn{background:#0070ba;color:#fff;border:none;padding:10px 14px;border-radius:8px;font-weight:700;cursor:pointer}
+/* Modal removed — using simplified checkout flow (auto-scroll + trigger PayPal). */
 
 .note{
   margin-top:14px;
@@ -61,7 +54,7 @@ p{text-align:center;color:#94a3b8;font-size:14px;}
   background:#020617;
   padding:12px;
   border-radius:10px;
-}
+} 
 </style>
 </head>
 
@@ -112,8 +105,9 @@ paypal.HostedButtons({
   hostedButtonId: "VSGA8Y2PMUZLJ"
 }).render("#paypal-container-20");
 
-// When ?plan=10 or ?plan=20 is present, hide other plans and show only the selected plan
-(async function() {
+// Simplified flow: when ?plan=10 or ?plan=20 is present, hide other plans, add back link,
+// scroll to the selected plan and attempt to click the PayPal hosted button (no modal).
+(function() {
   const params = new URLSearchParams(window.location.search);
   const plan = params.get('plan');
   if (!plan) return;
@@ -134,62 +128,27 @@ paypal.HostedButtons({
   const selected = document.querySelector('.plan[data-plan="'+plan+'"]');
   if (selected) selected.scrollIntoView({behavior:'smooth',block:'center'});
 
-  // Build and show modal summary for the plan
-  const priceText = selected?.querySelector('.plan-price')?.textContent || '';
-  const subText = selected?.querySelector('.plan-sub')?.textContent || '';
-  const modalHtml = `
-    <div class="modal-overlay" id="plan-modal">
-      <div class="modal" role="dialog" aria-modal="true">
-        <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
-        <h3>🏠 Home WiFi Payment</h3>
-        <p class="modal-sub">Select a plan and complete PayPal payment</p>
-        <div class="modal-plan">
-          <div class="plan-title">${selected?.querySelector('h2')?.textContent || ''}</div>
-          <div class="plan-sub">${subText}</div>
-          <div class="plan-price">${priceText}</div>
-        </div>
-        <div class="modal-actions">
-          <button id="modal-checkout" class="checkout-btn">Checkout</button>
-          <div class="card-icons">💳</div>
-        </div>
-        <a href="${window.location.pathname}" class="back-link">Show all plans</a>
-      </div>
-    </div>`;
+  // Attempt to click the PayPal hosted button in the selected plan (allow it some time to render)
+  const container = document.querySelector('#paypal-container-'+plan);
+  if (!container) return;
 
-  const wrapper = document.createElement('div');
-  wrapper.innerHTML = modalHtml;
-  document.body.appendChild(wrapper);
-
-  document.getElementById('modal-close').addEventListener('click', () => {
-    const m = document.getElementById('plan-modal');
-    if (m) m.remove();
-  });
-
-  document.getElementById('modal-checkout').addEventListener('click', async () => {
-    // Try to click PayPal button in the selected plan container
-    const container = document.querySelector('#paypal-container-'+plan);
-    if (container) {
-      // Wait until a button appears (hosted button may render async)
-      const findButton = () => container.querySelector('button, input[type=submit], a');
-      let button = findButton();
-      if (!button) {
-        // wait for up to 3s polling
-        const start = Date.now();
-        while (!button && Date.now() - start < 3000) {
-          await new Promise(r => setTimeout(r, 100));
-          button = findButton();
-        }
-      }
-      if (button) {
-        button.click();
-        return;
-      }
+  const findAndClick = () => {
+    const btn = container.querySelector('button, input[type=submit], a');
+    if (btn) {
+      // Let PayPal render visible UI, then emulate click so PayPal opens its checkout UI
+      btn.click();
+      return true;
     }
-    // Fallback: scroll to the plan and focus the container to show the embedded button
-    if (selected) {
-      selected.scrollIntoView({behavior:'smooth', block:'center'});
-    }
-  });
+    return false;
+  };
+
+  if (!findAndClick()) {
+    // Poll for up to 3 seconds
+    const start = Date.now();
+    const poll = setInterval(() => {
+      if (findAndClick() || Date.now() - start > 3000) clearInterval(poll);
+    }, 150);
+  }
 })();
 </script>
 

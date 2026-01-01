@@ -44,7 +44,12 @@ p{text-align:center;color:#94a3b8;font-size:14px;}
   #paypal-container-10, #paypal-container-20{min-width:160px}
   .card-icons{font-size:20px;opacity:0.9;}
   .back-link{display:inline-block;margin-bottom:12px;color:#94a3b8;font-size:13px;text-decoration:none;}
-  .return-btn{display:block;width:100%;margin-top:12px;padding:12px;background:#38bdf8;color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer}}
+  .return-btn{display:block;width:100%;margin-top:12px;padding:12px;background:#38bdf8;color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer}
+  .return-btn:focus{outline:3px solid rgba(59,130,246,0.9);outline-offset:2px}
+  /* Highlight the post-payment note so it's obvious after checkout */
+  .note.highlight{border:1px solid #16a34a;box-shadow:0 10px 30px rgba(34,197,94,0.08);background:linear-gradient(180deg,#071024,#020617)}
+  .pp-snippet pre{background:#081024;padding:12px;border-radius:8px;color:#cbd5f5;overflow:auto;font-size:13px}
+  .copy-btn{margin-top:8px;padding:8px 10px;border-radius:8px;border:none;background:#111827;color:#fff;cursor:pointer}
 
 /* Modal removed — using simplified checkout flow (auto-scroll + trigger PayPal). */
 
@@ -85,7 +90,7 @@ p{text-align:center;color:#94a3b8;font-size:14px;}
   </div>
 </div>
 
-<div class="note">
+<div class="note" id="post-note">
 After successful PayPal payment:
 <br><br>
 ✅ Payment completed successfully — great! (If you don't see a confirmation, check PayPal directly.)
@@ -98,7 +103,17 @@ To connect to WiFi:
 <br>• The amount paid
 <br>• Your device MAC address
 <br><br>
-<button class="return-btn" onclick="window.location.href='http://login/'">Return to WiFi Login</button>
+<button class="return-btn" id="return-btn" onclick="window.location.href='http://login/'">Return to WiFi Login</button>
+
+<details class="pp-snippet" style="margin-top:12px">
+  <summary style="cursor:pointer;color:#94a3b8">PayPal success snippet (copy)</summary>
+  <pre id="pp-snippet-code">&lt;div style=&quot;font-family:Inter,Arial,sans-serif;max-width:420px;margin:20px auto;padding:16px;border-radius:8px;background:#020617;color:#fff;&quot;&gt;
+&lt;h3&gt;✅ Payment completed&lt;/h3&gt;
+&lt;p&gt;To connect to WiFi:&lt;br&gt;1) Return to the WiFi login (tap &lt;a href=&quot;http://login/&quot;&gt;Return to WiFi Login&lt;/a&gt;)&lt;br&gt;2) Message me on Messenger with the amount paid and your device MAC address.&lt;/p&gt;
+&lt;/div&gt;</pre>
+  <button id="copy-snippet" class="copy-btn">Copy snippet</button>
+  <span id="copy-msg" style="margin-left:8px;color:#22c55e;display:none">Copied!</span>
+</details>
 </div>
 
 </div>
@@ -156,6 +171,35 @@ paypal.HostedButtons({
     const poll = setInterval(() => {
       if (findAndClick() || Date.now() - start > 3000) clearInterval(poll);
     }, 150);
+  }
+
+  // Highlight the post-payment note and focus the Return button so users on mobile see the next step
+  const note = document.getElementById('post-note');
+  const retBtn = document.getElementById('return-btn');
+  if (note) {
+    note.classList.add('highlight');
+    // give it a short animation by briefly toggling a class (keeps it subtle)
+    setTimeout(() => note.classList.remove('highlight'), 2500);
+    if (retBtn) {
+      // focus without scrolling (we already scrolled the plan into view)
+      try { retBtn.focus({preventScroll:true}); } catch(e){ retBtn.focus(); }
+    }
+  }
+
+  // Copy handler for the PayPal snippet
+  const copyBtn = document.getElementById('copy-snippet');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', async () => {
+      const codeEl = document.getElementById('pp-snippet-code');
+      if (!codeEl) return;
+      try {
+        await navigator.clipboard.writeText(codeEl.textContent);
+        const msg = document.getElementById('copy-msg');
+        if (msg) { msg.style.display = 'inline'; setTimeout(()=> msg.style.display = 'none', 1800); }
+      } catch (err) {
+        alert('Copy failed — select the snippet text and copy manually.');
+      }
+    });
   }
 })();
 </script>

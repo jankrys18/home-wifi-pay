@@ -182,10 +182,6 @@ $(if chap-id)
             document.sendin.submit();
             return false;
         }
-
-        function toggleGCash(id) {
-            document.getElementById(id).style.display = 'block';
-        }
     </script>
     $(endif)
 
@@ -204,47 +200,29 @@ $(if chap-id)
                     <div class="plan-sub">8hrs WiFi</div>
                     <div class="plan-price">₱10.00 PHP</div>
                     <div class="buttons">
-                        <button class="btn btn-paypal" onclick="window.location.href='https://jankrys18.github.io/home-wifi-pay/?plan=10'">
+                        <button class="btn btn-paypal" onclick="window.location.href='https://jankrys18.github.io/home-wifi-pay/plan/10'">
                             Pay with PayPal
                         </button>
-                        <button class="btn btn-gcash" onclick="toggleGCash('gcash10')">
-                            GCash
+                        <button class="btn btn-gcash" disabled title="GCash currently unavailable">
+                            GCash (Unavailable)
                         </button>
                     </div>
-
-                    <div class="gcash-box" id="gcash10">
-                        <p>Send ₱10 via GCash then message me:</p>
-                        <img src="img/gcash-qr.png" alt="GCash QR">
-                        <a class="chat-btn"
-                           href="https://m.me/YOURFBUSERNAME?text=I%20paid%20₱10%20for%208hrs.%20MAC:%20$(mac-esc)">
-                           Chat Me (Messenger)
-                        </a>
-                    </div>
-                </div>
+                 </div>
 
                 <div class="plan">
                     <div class="plan-title">₱20 – 1 Day</div>
                     <div class="plan-sub">1 day access</div>
                     <div class="plan-price">₱20.00 PHP</div>
                     <div class="buttons">
-                        <button class="btn btn-paypal" onclick="window.location.href='https://jankrys18.github.io/home-wifi-pay/?plan=20'">
+                        <button class="btn btn-paypal" onclick="window.location.href='https://jankrys18.github.io/home-wifi-pay/plan/20'">
                             Pay with PayPal
                         </button>
-                        <button class="btn btn-gcash" onclick="toggleGCash('gcash20')">
-                            GCash
+                        <button class="btn btn-gcash" disabled title="GCash currently unavailable">
+                            GCash (Unavailable)
                         </button>
                     </div>
-
-                    <div class="gcash-box" id="gcash20">
-                        <p>Send ₱20 via GCash then message me:</p>
-                        <img src="img/gcash-qr.png" alt="GCash QR">
-                        <a class="chat-btn"
-                           href="https://m.me/YOURFBUSERNAME?text=I%20paid%20₱20%20for%201%20day.%20MAC:%20$(mac-esc)">
-                           Chat Me (Messenger)
-                        </a>
-                    </div>
-                </div>
-            </div>
+                 </div>
+             </div>
 
             <!-- LOGIN -->
             <div class="section">

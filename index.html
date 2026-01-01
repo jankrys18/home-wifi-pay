@@ -186,6 +186,19 @@ paypal.HostedButtons({
     }
   }
 
+  // Populate PayPal snippet with plan-specific details (if a plan is selected)
+  const codeEl = document.getElementById('pp-snippet-code');
+  if (codeEl && selected) {
+    const planTitle = selected.querySelector('h2')?.textContent?.trim() || '';
+    const planSub = selected.querySelector('.plan-sub')?.textContent?.trim() || '';
+    const planPrice = selected.querySelector('.plan-price')?.textContent?.trim() || '';
+    const snippetHTML = `<div style="font-family:Inter,Arial,sans-serif;max-width:420px;margin:20px auto;padding:16px;border-radius:8px;background:#020617;color:#fff;">\n` +
+      `<h3>✅ Payment completed</h3>\n` +
+      `<p>You purchased <strong>${planTitle}</strong> (${planPrice}) — ${planSub}.<br>To connect to WiFi:<br>1) Return to the WiFi login (tap <a href=\"http://login/\">Return to WiFi Login</a>)<br>2) Message me on Messenger with the amount paid and your device MAC address.</p>\n` +
+      `</div>`;
+    codeEl.textContent = snippetHTML;
+  }
+
   // Copy handler for the PayPal snippet
   const copyBtn = document.getElementById('copy-snippet');
   if (copyBtn) {

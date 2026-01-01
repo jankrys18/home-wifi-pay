@@ -103,13 +103,13 @@ To connect to WiFi:
 <br>• The amount paid
 <br>• Your device MAC address
 <br><br>
-<button class="return-btn" id="return-btn" onclick="window.location.href='http://login/'">Return to WiFi Login</button>
+<button class="return-btn" id="return-btn" onclick="window.location.href='http://hotspot.local'">Return to WiFi Login</button>
 
 <details class="pp-snippet" style="margin-top:12px">
   <summary style="cursor:pointer;color:#94a3b8">PayPal success snippet (copy)</summary>
   <pre id="pp-snippet-code">&lt;div style=&quot;font-family:Inter,Arial,sans-serif;max-width:420px;margin:20px auto;padding:16px;border-radius:8px;background:#020617;color:#fff;&quot;&gt;
 &lt;h3&gt;✅ Payment completed&lt;/h3&gt;
-&lt;p&gt;To connect to WiFi:&lt;br&gt;1) Return to the WiFi login (tap &lt;a href=&quot;http://login/&quot;&gt;Return to WiFi Login&lt;/a&gt;)&lt;br&gt;2) Message me on Messenger with the amount paid and your device MAC address.&lt;/p&gt;
+&lt;p&gt;To connect to WiFi:&lt;br&gt;1) Return to the WiFi login (tap &lt;a href=&quot;http://hotspot.local&quot;&gt;Return to WiFi Login&lt;/a&gt;)&lt;br&gt;2) Message me on Messenger with the amount paid and your device MAC address.&lt;/p&gt;
 &lt;/div&gt;</pre>
   <button id="copy-snippet" class="copy-btn">Copy snippet</button>
   <span id="copy-msg" style="margin-left:8px;color:#22c55e;display:none">Copied!</span>
@@ -194,7 +194,7 @@ paypal.HostedButtons({
     const planPrice = selected.querySelector('.plan-price')?.textContent?.trim() || '';
     const snippetHTML = `<div style="font-family:Inter,Arial,sans-serif;max-width:420px;margin:20px auto;padding:16px;border-radius:8px;background:#020617;color:#fff;">\n` +
       `<h3>✅ Payment completed</h3>\n` +
-      `<p>You purchased <strong>${planTitle}</strong> (${planPrice}) — ${planSub}.<br>To connect to WiFi:<br>1) Return to the WiFi login (tap <a href=\"http://login/\">Return to WiFi Login</a>)<br>2) Message me on Messenger with the amount paid and your device MAC address.</p>\n` +
+      `<p>You purchased <strong>${planTitle}</strong> (${planPrice}) — ${planSub}.<br>To connect to WiFi:<br>1) Return to the WiFi login (tap <a href=\"http://hotspot.local\">Return to WiFi Login</a>)<br>2) Message me on Messenger with the amount paid and your device MAC address.</p>\n` +
       `</div>`;
     codeEl.textContent = snippetHTML;
   }

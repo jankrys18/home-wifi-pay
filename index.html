@@ -43,6 +43,9 @@ p{text-align:center;color:#94a3b8;font-size:14px;}
   /* Ensure PayPal container has enough width so text doesn't break vertically */
   #paypal-container-10, #paypal-container-20{min-width:160px}
   .card-icons{font-size:20px;opacity:0.9;}
+  .checkout-cta{background:#0070ba;color:#fff;border:none;padding:10px 12px;border-radius:8px;font-weight:700;cursor:pointer}
+  .checkout-cta:focus{outline:3px solid rgba(59,130,246,0.9);outline-offset:2px}
+  .checkout-help{font-size:12px;color:#94a3b8;margin-top:8px}
   .back-link{display:inline-block;margin-bottom:12px;color:#94a3b8;font-size:13px;text-decoration:none;}
   .return-btn{display:block;width:100%;margin-top:12px;padding:12px;background:#38bdf8;color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer}
   .return-btn:focus{outline:3px solid rgba(59,130,246,0.9);outline-offset:2px}
@@ -76,6 +79,7 @@ p{text-align:center;color:#94a3b8;font-size:14px;}
   <div class="plan-price">₱10.00 PHP</div>
   <div class="checkout">
     <div id="paypal-container-10"></div>
+    <button class="checkout-cta" data-plan="10">Checkout</button>
     <div class="card-icons" aria-hidden="true">💳</div>
   </div>
 </div>
@@ -86,6 +90,7 @@ p{text-align:center;color:#94a3b8;font-size:14px;}
   <div class="plan-price">₱20.00 PHP</div>
   <div class="checkout">
     <div id="paypal-container-20"></div>
+    <button class="checkout-cta" data-plan="20">Checkout</button>
     <div class="card-icons" aria-hidden="true">💳</div>
   </div>
 </div>
@@ -161,27 +166,32 @@ paypal.HostedButtons({
   const selected = document.querySelector('.plan[data-plan="'+plan+'"]');
   if (selected) selected.scrollIntoView({behavior:'smooth',block:'center'});
 
-  // Attempt to click the PayPal hosted button in the selected plan (allow it some time to render)
+  // Instead of auto-clicking (which browsers may block), show a visible Checkout CTA and focus it
+  const cta = selected.querySelector('.checkout-cta');
   const container = document.querySelector('#paypal-container-'+plan);
-  if (!container) return;
+  if (cta) {
+    // Focus the CTA so user can tap immediately
+    try { cta.focus({preventScroll:true}); } catch(e){ cta.focus(); }
 
-  const findAndClick = () => {
-    const btn = container.querySelector('button, input[type=submit], a');
-    if (btn) {
-      // Let PayPal render visible UI, then emulate click so PayPal opens its checkout UI
-      btn.click();
-      return true;
-    }
-    return false;
-  };
-
-  if (!findAndClick()) {
-    // Poll for up to 3 seconds
-    const start = Date.now();
-    const poll = setInterval(() => {
-      if (findAndClick() || Date.now() - start > 3000) clearInterval(poll);
-    }, 150);
+    // When CTA is clicked, attempt to trigger the PayPal button (user gesture -> allowed)
+    cta.addEventListener('click', () => {
+      if (!container) return;
+      const btn = container.querySelector('button, input[type=submit], a');
+      if (btn) {
+        btn.click();
+      } else {
+        // If PayPal button hasn't rendered yet, show a small helper text and wait, then try again
+        let tried = 0;
+        const poll = setInterval(() => {
+          const b = container.querySelector('button, input[type=submit], a');
+          if (b) { b.click(); clearInterval(poll); }
+          tried += 1;
+          if (tried > 20) { clearInterval(poll); alert('PayPal is still loading — please try again in a moment.'); }
+        }, 200);
+      }
+    });
   }
+
 
   // Highlight the post-payment note and focus the Return button so users on mobile see the next step
   const note = document.getElementById('post-note');

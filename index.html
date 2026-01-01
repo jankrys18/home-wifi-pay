@@ -132,7 +132,17 @@ paypal.HostedButtons({
 // scroll to the selected plan and attempt to click the PayPal hosted button (no modal).
 (function() {
   const params = new URLSearchParams(window.location.search);
-  const plan = params.get('plan');
+  let plan = params.get('plan');
+  // Fallbacks: some captive portal setups strip query params — check pathname (e.g. /plan/10 or /10)
+  if (!plan) {
+    const pathMatch = window.location.pathname.match(/(?:\/plan\/|\/)(10|20)(?:\/?$)/);
+    if (pathMatch) plan = pathMatch[1];
+  }
+  // Also allow hash fallback like #plan=10
+  if (!plan && window.location.hash) {
+    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+    plan = hashParams.get('plan');
+  }
   if (!plan) return;
 
   document.querySelectorAll('.plan').forEach(el => {

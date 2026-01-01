@@ -44,6 +44,7 @@ p{text-align:center;color:#94a3b8;font-size:14px;}
   #paypal-container-10, #paypal-container-20{min-width:160px}
   .card-icons{font-size:20px;opacity:0.9;}
   .back-link{display:inline-block;margin-bottom:12px;color:#94a3b8;font-size:13px;text-decoration:none;}
+  .return-btn{display:block;width:100%;margin-top:12px;padding:12px;background:#38bdf8;color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer}}
 
 /* Modal removed — using simplified checkout flow (auto-scroll + trigger PayPal). */
 
@@ -86,11 +87,18 @@ p{text-align:center;color:#94a3b8;font-size:14px;}
 
 <div class="note">
 After successful PayPal payment:
-<br>• Take note of the amount paid
-<br>• Message me on Messenger
-<br>• Send your device MAC address
 <br><br>
-I will reply with your WiFi username & password.
+✅ Payment completed successfully — great! (If you don't see a confirmation, check PayPal directly.)
+<br><br>
+To connect to WiFi:
+<br>1️⃣ Return to the WiFi login page (tap the button below)
+<br>2️⃣ Enter the username & password I will send you
+<br><br>
+💬 When you message me on Messenger, include:
+<br>• The amount paid
+<br>• Your device MAC address
+<br><br>
+<button class="return-btn" onclick="window.location.href='http://login/'">Return to WiFi Login</button>
 </div>
 
 </div>

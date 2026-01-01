@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pay for Home WiFi</title>
+
+<script 
+  src="https://www.paypal.com/sdk/js?client-id=BAAAXOQyESI5vxGDXZpCYu4IRGe3clvM1sBdX6Eml7n26Q27JaHgl9q-gsCRzp_MBKy95uYr8wWvRnBGxY&components=hosted-buttons&currency=PHP">
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+  font-family:Inter,Arial,sans-serif;
+  background:#0f172a;
+  color:#fff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+.card{
+  background:#020617;
+  padding:24px;
+  border-radius:16px;
+  width:100%;
+  max-width:420px;
+  box-shadow:0 20px 40px rgba(0,0,0,.6);
+}
+h1{text-align:center;margin-bottom:8px;}
+p{text-align:center;color:#94a3b8;font-size:14px;}
+.plan{
+  border:1px solid #1e293b;
+  border-radius:12px;
+  padding:16px;
+  margin-top:16px;
+}
+.plan h2{margin:0;font-size:18px;}  .plan-sub{color:#cbd5f5;margin-top:6px;font-size:13px;}
+  .plan-price{color:#22c55e;font-weight:600;margin-top:6px;}
+  .checkout{margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:nowrap;}
+  /* Ensure PayPal container has enough width so text doesn't break vertically */
+  #paypal-container-10, #paypal-container-20{min-width:160px}
+  .card-icons{font-size:20px;opacity:0.9;}
+  .back-link{display:inline-block;margin-bottom:12px;color:#94a3b8;font-size:13px;text-decoration:none;}
+  .return-btn{display:block;width:100%;margin-top:12px;padding:12px;background:#38bdf8;color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer}
+  .return-btn:focus{outline:3px solid rgba(59,130,246,0.9);outline-offset:2px}
+  /* Highlight the post-payment note so it's obvious after checkout */
+  .note.highlight{border:1px solid #16a34a;box-shadow:0 10px 30px rgba(34,197,94,0.08);background:linear-gradient(180deg,#071024,#020617)}
+  .pp-snippet pre{background:#081024;padding:12px;border-radius:8px;color:#cbd5f5;overflow:auto;font-size:13px}
+  .copy-btn{margin-top:8px;padding:8px 10px;border-radius:8px;border:none;background:#111827;color:#fff;cursor:pointer}
+
+/* Modal removed — using simplified checkout flow (auto-scroll + trigger PayPal). */
+
+.note{
+  margin-top:14px;
+  font-size:13px;
+  color:#cbd5f5;
+  background:#020617;
+  padding:12px;
+  border-radius:10px;
+} 
+</style>
+</head>
+
+<body>
+<div class="card">
+
+<h1>🏠 Home WiFi Payment</h1>
+<p>Select a plan and complete PayPal payment</p>
+
+<div class="plan" data-plan="10">
+  <h2>₱10 – 8 Hours</h2>
+  <div class="plan-sub">8hrs WiFi</div>
+  <div class="plan-price">₱10.00 PHP</div>
+  <div class="checkout">
+    <div id="paypal-container-10"></div>
+    <div class="card-icons" aria-hidden="true">💳</div>
+  </div>
+</div>
+
+<div class="plan" data-plan="20">
+  <h2>₱20 – 1 Day</h2>
+  <div class="plan-sub">1 day access</div>
+  <div class="plan-price">₱20.00 PHP</div>
+  <div class="checkout">
+    <div id="paypal-container-20"></div>
+    <div class="card-icons" aria-hidden="true">💳</div>
+  </div>
+</div>
+
+<div class="note" id="post-note">
+After successful PayPal payment:
+<br><br>
+✅ Payment completed successfully — great! (If you don't see a confirmation, check PayPal directly.)
+<br><br>
+To connect to WiFi:
+<br>1️⃣ Return to the WiFi login page (tap the button below)
+<br>2️⃣ Enter the username & password I will send you
+<br><br>
+💬 When you message me on Messenger, include:
+<br>• The amount paid
+<br>• Your device MAC address
+<br><br>
+<button class="return-btn" id="return-btn" onclick="window.location.href='http://hotspot.local'">Return to WiFi Login</button>
+
+<details class="pp-snippet" style="margin-top:12px">
+  <summary style="cursor:pointer;color:#94a3b8">PayPal success snippet (copy)</summary>
+  <pre id="pp-snippet-code">&lt;div style=&quot;font-family:Inter,Arial,sans-serif;max-width:420px;margin:20px auto;padding:16px;border-radius:8px;background:#020617;color:#fff;&quot;&gt;
+&lt;h3&gt;✅ Payment completed&lt;/h3&gt;
+&lt;p&gt;To connect to WiFi:&lt;br&gt;1) Return to the WiFi login (tap &lt;a href=&quot;http://hotspot.local&quot;&gt;Return to WiFi Login&lt;/a&gt;)&lt;br&gt;2) Message me on Messenger with the amount paid and your device MAC address.&lt;/p&gt;
+&lt;/div&gt;</pre>
+  <button id="copy-snippet" class="copy-btn">Copy snippet</button>
+  <span id="copy-msg" style="margin-left:8px;color:#22c55e;display:none">Copied!</span>
+</details>
+</div>
+
+</div>
+
+<script>
+// Render PayPal hosted buttons
+paypal.HostedButtons({
+  hostedButtonId: "89L86H4QR8LU4"
+}).render("#paypal-container-10");
+
+paypal.HostedButtons({
+  hostedButtonId: "VSGA8Y2PMUZLJ"
+}).render("#paypal-container-20");
+
+// Simplified flow: when ?plan=10 or ?plan=20 is present, hide other plans, add back link,
+// scroll to the selected plan and attempt to click the PayPal hosted button (no modal).
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  let plan = params.get('plan');
+  // Fallbacks: some captive portal setups strip query params — check pathname (e.g. /plan/10 or /10)
+  if (!plan) {
+    const pathMatch = window.location.pathname.match(/(?:\/plan\/|\/)(10|20)(?:\/?$)/);
+    if (pathMatch) plan = pathMatch[1];
+  }
+  // Also allow hash fallback like #plan=10
+  if (!plan && window.location.hash) {
+    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+    plan = hashParams.get('plan');
+  }
+  if (!plan) return;
+
+  document.querySelectorAll('.plan').forEach(el => {
+    if (el.dataset.plan !== plan) el.style.display = 'none';
+  });
+
+  // Add a small "Show all plans" link so users can go back
+  const back = document.createElement('a');
+  back.href = window.location.pathname;
+  back.textContent = 'Show all plans';
+  back.className = 'back-link';
+  const card = document.querySelector('.card');
+  if (card) card.insertBefore(back, card.firstChild);
+
+  // Scroll the selected plan into view
+  const selected = document.querySelector('.plan[data-plan="'+plan+'"]');
+  if (selected) selected.scrollIntoView({behavior:'smooth',block:'center'});
+
+  // Attempt to click the PayPal hosted button in the selected plan (allow it some time to render)
+  const container = document.querySelector('#paypal-container-'+plan);
+  if (!container) return;
+
+  const findAndClick = () => {
+    const btn = container.querySelector('button, input[type=submit], a');
+    if (btn) {
+      // Let PayPal render visible UI, then emulate click so PayPal opens its checkout UI
+      btn.click();
+      return true;
+    }
+    return false;
+  };
+
+  if (!findAndClick()) {
+    // Poll for up to 3 seconds
+    const start = Date.now();
+    const poll = setInterval(() => {
+      if (findAndClick() || Date.now() - start > 3000) clearInterval(poll);
+    }, 150);
+  }
+
+  // Highlight the post-payment note and focus the Return button so users on mobile see the next step
+  const note = document.getElementById('post-note');
+  const retBtn = document.getElementById('return-btn');
+  if (note) {
+    note.classList.add('highlight');
+    // give it a short animation by briefly toggling a class (keeps it subtle)
+    setTimeout(() => note.classList.remove('highlight'), 2500);
+    if (retBtn) {
+      // focus without scrolling (we already scrolled the plan into view)
+      try { retBtn.focus({preventScroll:true}); } catch(e){ retBtn.focus(); }
+    }
+  }
+
+  // Populate PayPal snippet with plan-specific details (if a plan is selected)
+  const codeEl = document.getElementById('pp-snippet-code');
+  if (codeEl && selected) {
+    const planTitle = selected.querySelector('h2')?.textContent?.trim() || '';
+    const planSub = selected.querySelector('.plan-sub')?.textContent?.trim() || '';
+    const planPrice = selected.querySelector('.plan-price')?.textContent?.trim() || '';
+    const snippetHTML = `<div style="font-family:Inter,Arial,sans-serif;max-width:420px;margin:20px auto;padding:16px;border-radius:8px;background:#020617;color:#fff;">\n` +
+      `<h3>✅ Payment completed</h3>\n` +
+      `<p>You purchased <strong>${planTitle}</strong> (${planPrice}) — ${planSub}.<br>To connect to WiFi:<br>1) Return to the WiFi login (tap <a href=\"http://hotspot.local\">Return to WiFi Login</a>)<br>2) Message me on Messenger with the amount paid and your device MAC address.</p>\n` +
+      `</div>`;
+    codeEl.textContent = snippetHTML;
+  }
+
+  // Copy handler for the PayPal snippet
+  const copyBtn = document.getElementById('copy-snippet');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', async () => {
+      const codeEl = document.getElementById('pp-snippet-code');
+      if (!codeEl) return;
+      try {
+        await navigator.clipboard.writeText(codeEl.textContent);
+        const msg = document.getElementById('copy-msg');
+        if (msg) { msg.style.display = 'inline'; setTimeout(()=> msg.style.display = 'none', 1800); }
+      } catch (err) {
+        alert('Copy failed — select the snippet text and copy manually.');
+      }
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
